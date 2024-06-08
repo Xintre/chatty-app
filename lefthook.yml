@@ -1,0 +1,9 @@
+pre-commit:
+  parallel: true
+  commands:
+    format-staged:
+      glob: "*.{js,ts,tsx,jsx}"
+      run: yarn prettier --write {staged_files}
+
+    lint:
+      run: npm run lint
