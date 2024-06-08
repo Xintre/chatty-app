@@ -17,7 +17,6 @@ There also exist 2 milestones: `Required` and `Extra features` that separate the
 - [React Native](https://reactnative.dev) + Expo for cross-platform mobile development
 - [Apollo Client](https://www.apollographql.com/docs/react/) for GraphQL queries and mutations
 - [React Navigation](https://reactnavigation.org) for navigation with Expo router
-- [React Native Paper](https://callstack.github.io/react-native-paper/) for UI components
 
 ## Code style
 
