@@ -1,16 +1,15 @@
 import 'react-native-reanimated';
 
-import { useFonts } from 'expo-font';
-import { Slot } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { pickBy } from 'lodash';
-import { useEffect } from 'react';
-import { ActivityIndicator, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-
 import * as OpenSansFonts from '@expo-google-fonts/open-sans';
 import * as PoppinsFonts from '@expo-google-fonts/poppins';
+import * as SplashScreen from 'expo-splash-screen';
+import { ActivityIndicator, View } from 'react-native';
 import { DefaultTheme, ThemeProvider } from '@react-navigation/native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Slot } from 'expo-router';
+import { pickBy } from 'lodash';
+import { useEffect } from 'react';
+import { useFonts } from 'expo-font';
 
 import commonStyles from '../styles/commonStyles';
 
