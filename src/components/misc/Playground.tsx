@@ -1,8 +1,10 @@
 import Button from '@components/design/Button';
+import Corners from '@styles/corners';
 import Divider from '@components/design/Divider';
+import IconButton from '@components/design/IconButton';
 import Text from '@components/design/Text';
 import { Colors } from '@styles/colors';
-import { ScrollView, StyleSheet } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 
 export function Playground() {
   return (
@@ -54,6 +56,29 @@ export function Playground() {
       <Button variant="text" icon="chevron-left" disabled>
         Button - text (with icon, disabled)
       </Button>
+
+      <Text variant="h2" style={styles.plumTitle2}>
+        Icon Button
+      </Text>
+
+      <Divider secondary />
+
+      <View style={styles.iconsGrid}>
+        {/* IconButton - background (with icon) */}
+        <IconButton background icon="people" />
+        {/* IconButton - background (disabled) */}
+        <IconButton background icon="people" disabled />
+
+        {/* IconButton - selected, background (with icon) */}
+        <IconButton selected background icon="people" />
+        {/* IconButton - selected, background (disabled) */}
+        <IconButton selected background icon="people" disabled />
+
+        {/* IconButton - default */}
+        <IconButton selected icon="people" />
+        {/* IconButton - default (disabled) */}
+        <IconButton selected icon="people" disabled />
+      </View>
     </ScrollView>
   );
 }
@@ -71,6 +96,16 @@ const styles = StyleSheet.create({
   plumTitle2: {
     color: Colors.PLUM400,
     textAlign: 'center',
+  },
+  iconsGrid: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 60,
+    paddingVertical: 40,
+    paddingHorizontal: 20,
+    flexWrap: 'wrap',
+    backgroundColor: Colors.GRAY100,
+    borderRadius: Corners.BIG,
   },
 });
 
