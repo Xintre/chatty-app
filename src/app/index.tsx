@@ -1,5 +1,15 @@
-import Playground from '../components/misc/Playground';
+import Loader from '@components/misc/Loader';
+import { useCallback } from 'react';
+import { useFocusEffect, useRouter } from 'expo-router';
 
 export default function Home() {
-  return <Playground />;
+  const { replace } = useRouter();
+
+  useFocusEffect(
+    useCallback(() => {
+      replace('logIn');
+    }, [replace]),
+  );
+
+  return <Loader />;
 }

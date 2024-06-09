@@ -18,6 +18,7 @@ export type TextInputProps = {
   icon?: IconButtonProps['icon'];
   disabled?: boolean;
   alwaysShowIcon?: boolean;
+  onIconPress?: IconButtonProps['onPress'];
 } & RNTextInputProps;
 
 const INPUT_BORDER_RADIUS = 10; // as in Figma :)
@@ -30,6 +31,7 @@ export function TextInput({
   style,
   icon,
   disabled,
+  onIconPress,
   ...props
 }: TextInputProps) {
   const [isFocused, setIsFocused] = useState(false);
@@ -74,8 +76,13 @@ export function TextInput({
           editable={!disabled}
         />
 
-        {!!(icon && ((props.value?.length && isFocused) || alwaysShowIcon)) && (
-          <IconButton style={{ paddingVertical: 0, paddingTop: 5 }} icon={icon} iconSize={18} />
+        {!!(icon && (props.value?.length || alwaysShowIcon)) && (
+          <IconButton
+            onPress={onIconPress}
+            style={{ paddingVertical: 0, paddingTop: 5 }}
+            icon={icon}
+            iconSize={18}
+          />
         )}
       </View>
 

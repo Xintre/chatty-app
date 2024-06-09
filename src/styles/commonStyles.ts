@@ -1,3 +1,4 @@
+import Colors from '@styles/colors';
 import { StyleSheet } from 'react-native';
 
 import Corners from './corners';
@@ -21,6 +22,14 @@ export const commonStyles = StyleSheet.create({
   },
   smallSurface: {
     borderRadius: Corners.SMALL,
+  },
+  section: {
+    width: '100%',
+    maxWidth: '100%',
+  },
+  link: {
+    color: Colors.BLUE500,
+    textDecorationLine: 'underline',
   },
 });
 
