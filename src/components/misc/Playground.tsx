@@ -3,10 +3,14 @@ import Corners from '@styles/corners';
 import Divider from '@components/design/Divider';
 import IconButton from '@components/design/IconButton';
 import Text from '@components/design/Text';
+import TextInput from '@components/design/TextInput';
 import { Colors } from '@styles/colors';
 import { ScrollView, StyleSheet, View } from 'react-native';
+import { useState } from 'react';
 
 export function Playground() {
+  const [textInputValue, setTextInputValue] = useState('');
+
   return (
     <ScrollView contentContainerStyle={styles.root}>
       <Text variant="h1" style={styles.plumTitle}>
@@ -79,6 +83,36 @@ export function Playground() {
         {/* IconButton - default (disabled) */}
         <IconButton selected icon="people" disabled />
       </View>
+
+      <Text variant="h2" style={styles.plumTitle2}>
+        TextInput
+      </Text>
+
+      <Divider secondary />
+
+      <View style={styles.textInputContainer}>
+        <TextInput
+          label="TextInput #1"
+          icon="clear"
+          value={textInputValue}
+          onChangeText={(text) => setTextInputValue(text)}
+        />
+
+        <TextInput
+          label="TextInput #1"
+          error
+          value={textInputValue}
+          onChangeText={(text) => setTextInputValue(text)}
+        />
+
+        <TextInput
+          label="TextInput #1"
+          error
+          errorText="Custom error text :)"
+          value={textInputValue}
+          onChangeText={(text) => setTextInputValue(text)}
+        />
+      </View>
     </ScrollView>
   );
 }
@@ -104,6 +138,13 @@ const styles = StyleSheet.create({
     paddingVertical: 40,
     paddingHorizontal: 20,
     flexWrap: 'wrap',
+    backgroundColor: Colors.GRAY100,
+    borderRadius: Corners.BIG,
+  },
+  textInputContainer: {
+    justifyContent: 'center',
+    paddingVertical: 40,
+    paddingHorizontal: 20,
     backgroundColor: Colors.GRAY100,
     borderRadius: Corners.BIG,
   },
