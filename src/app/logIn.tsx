@@ -8,6 +8,7 @@ import Text from '@components/design/Text';
 import TextInput from '@components/design/TextInput';
 import Toast from 'react-native-root-toast';
 import commonStyles from '@styles/commonStyles';
+import useAuthContext from '@hooks/useAuthContext';
 import { Alert, KeyboardAvoidingView, StyleSheet, View } from 'react-native';
 import { capitalize } from 'lodash';
 import { useCallback, useMemo, useState } from 'react';
@@ -20,11 +21,17 @@ import { LOGIN_USER_MUTATION } from '../graphql/mutations';
 
 export function LoginScreen() {
   const { replace, push } = useRouter();
-  const { email = '', password = '' } = useLocalSearchParams<{ email: string; password: string }>();
+  const { email = '', password = '' } = useLocalSearchParams<{
+    email?: string;
+    password?: string;
+  }>();
+
+  const { keyboardShown } = useKeyboard();
+  const authContext = useAuthContext();
+
   const [emailInputValue, setEmailInputValue] = useState(email);
   const [passwordInputValue, setPasswordInputValue] = useState(password);
   const [passwordVisible, setPasswordVisible] = useState(false);
-  const { keyboardShown } = useKeyboard();
 
   const [logInUserMutation, { loading }] = useMutation(LOGIN_USER_MUTATION, {
     variables: {
@@ -51,6 +58,7 @@ export function LoginScreen() {
       console.log('Logged in successfully', data);
 
       SecureStore.setItem(SecureStoreKeys.token, data.loginUser.token);
+      authContext.setToken(data.loginUser.token);
 
       replace('chats');
     },
@@ -83,6 +91,7 @@ export function LoginScreen() {
       title="Welcome back"
       subtitle="Log in and stay in touch with everyone!"
       showBackButton={false}
+      backgroundColor={Colors.BLUE300}
     >
       {loading ? (
         <Loader />
@@ -124,7 +133,6 @@ export function LoginScreen() {
             <View style={[commonStyles.section, styles.buttonsContainer]}>
               <Button
                 variant="filled"
-                style={styles.button}
                 onPress={signIn}
                 onLongPress={() => {
                   // @ts-ignore next line (bad typings of router)
@@ -159,10 +167,6 @@ const styles = StyleSheet.create({
   inputsSection: {
     flex: 1, // make this inputs section take all available space but two other sections (heading & footer) will take only as much space as they need to live, no less (& no more)
     alignContent: 'flex-start',
-  },
-  button: {
-    margin: 50,
-    width: '100%',
   },
   buttonsContainer: {
     paddingHorizontal: 20,

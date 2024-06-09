@@ -8,9 +8,17 @@ This project has been planned in a kanban project board on GitHub. You can find 
 
 All [issues](https://github.com/Xintre/chatty-app/issues) and pull requests have been linked to the project board, so you can easily track the progress of the project.
 
+Convention for commit naming follows the [Conventional Commits standard](https://www.conventionalcommits.org/en/v1.0.0/).
+
+Branch `main` is the upstream branch, also used for development. Each issue is developed in a separate branch, named descriptive of the feature contained. Branch `main` has protection rules set up so that it cannot be pushed to, instead Pull Requests are required and each project item is linked to the project board as an issue tied with a PR.
+
 Each issue contains labels informing of the area of improvement that is to be implemented.
 
 There also exist 2 milestones: [`Required`](https://github.com/Xintre/chatty-app/milestone/1) and [`Extra features`](https://github.com/Xintre/chatty-app/milestone/2) that separate the required features from the extra ones. Normally, I would use versions here, but this is a short demo project for free
+
+## Continuous Integration 🔄
+
+This project contains a single GH Actions [workflow for CI](./.github/workflows/ci.yml) that simply installs dependencies with NPM and runs `npm run lint` to ensure valid code style (even though it should be enforced by GIT pre-commit hooks - as a secondary check). Merging of PRs is configured to be **blocked** until all status checks of GH Actions are "pass".
 
 ## Technologies 🧑‍💻
 

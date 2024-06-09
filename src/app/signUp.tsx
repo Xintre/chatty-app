@@ -21,12 +21,11 @@ export function SignUpScreen() {
   const { replace } = useRouter();
   const { keyboardShown } = useKeyboard();
 
-  const [emailInputValue, setEmailInputValue] = useState('natalia.rozga02@gmail.com');
-  const [nameInputValue, setNameInputValue] = useState('Natalia');
-  const [surnameInputValue, setSurnameInputValue] = useState('Rózga');
-  const [passwordInputValue, setPasswordInputValue] = useState('asdqweqwe123');
-  const [passwordConfirmationInputValue, setPasswordConfirmationInputValue] =
-    useState('asdqweqwe123');
+  const [emailInputValue, setEmailInputValue] = useState('');
+  const [nameInputValue, setNameInputValue] = useState('');
+  const [surnameInputValue, setSurnameInputValue] = useState('');
+  const [passwordInputValue, setPasswordInputValue] = useState('');
+  const [passwordConfirmationInputValue, setPasswordConfirmationInputValue] = useState('');
   const [passwordVisible, setPasswordVisible] = useState(false);
 
   const [registerUserMutation, { loading }] = useMutation(REGISTER_USER_MUTATION, {
@@ -123,7 +122,7 @@ export function SignUpScreen() {
   }, [registerUserMutation]);
 
   return (
-    <Screen title="Create account" showBackButton={false}>
+    <Screen title="Create account" showBackButton={false} backgroundColor={Colors.BLUE300}>
       {loading ? (
         <Loader />
       ) : (
@@ -208,12 +207,7 @@ export function SignUpScreen() {
 
           {!keyboardShown && (
             <View style={[commonStyles.section, styles.buttonsContainer]}>
-              <Button
-                disabled={disableButton}
-                variant="filled"
-                style={styles.button}
-                onPress={signUp}
-              >
+              <Button disabled={disableButton} variant="filled" onPress={signUp}>
                 Sign up
               </Button>
 
@@ -261,10 +255,6 @@ export function SignUpScreen() {
 }
 
 const styles = StyleSheet.create({
-  button: {
-    margin: 50,
-    width: '100%',
-  },
   buttonsContainer: {
     paddingHorizontal: 20,
     paddingTop: 20,
