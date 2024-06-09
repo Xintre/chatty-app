@@ -33,23 +33,27 @@ export default Text;
 const styles = {
   h1: {
     fontSize: 36,
-    fontWeight: 'bold',
+    fontWeight: 'semibold',
     fontFamily: Fonts.Poppins.Bold,
+    lineHeight: 42,
   },
   h2: {
     fontSize: 28,
-    fontWeight: 'bold',
+    fontWeight: 'semibold',
     fontFamily: Fonts.Poppins.Bold,
+    lineHeight: 42,
   },
   h3: {
     fontSize: 22,
-    fontWeight: 'bold',
+    fontWeight: 'semibold',
     fontFamily: Fonts.Poppins.Bold,
+    lineHeight: 33,
   },
   h4: {
     fontSize: 16,
     fontWeight: 'semibold',
     fontFamily: Fonts.Poppins.SemiBold,
+    lineHeight: 24,
   },
   button: {
     fontSize: 16,
