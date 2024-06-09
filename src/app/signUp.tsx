@@ -6,19 +6,21 @@ import Text from '@components/design/Text';
 import TextInput from '@components/design/TextInput';
 import commonStyles from '@styles/commonStyles';
 import { KeyboardAvoidingView, StyleSheet, View } from 'react-native';
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useKeyboard } from '@react-native-community/hooks';
 import { useRouter } from 'expo-router';
+import { validate } from 'email-validator';
 
 export function SignUpScreen() {
   const { replace } = useRouter();
   const { keyboardShown } = useKeyboard();
 
-  const [emailInputValue, setEmailInputValue] = useState('');
-  const [nameInputValue, setNameInputValue] = useState('');
-  const [surnameInputValue, setSurnameInputValue] = useState('');
-  const [passwordInputValue, setPasswordInputValue] = useState('');
-  const [passwordConfirmationInputValue, setPasswordConfirmationInputValue] = useState('');
+  const [emailInputValue, setEmailInputValue] = useState('natalia.rozga02@gmail.com');
+  const [nameInputValue, setNameInputValue] = useState('Natalia');
+  const [surnameInputValue, setSurnameInputValue] = useState('Rózga');
+  const [passwordInputValue, setPasswordInputValue] = useState('asdqweqwe123');
+  const [passwordConfirmationInputValue, setPasswordConfirmationInputValue] =
+    useState('asdqweqwe123');
   const [passwordVisible, setPasswordVisible] = useState(false);
 
   const signUp = useCallback(() => {}, []);
@@ -44,9 +46,40 @@ export function SignUpScreen() {
     setSurnameInputValue('');
   }, []);
 
+  const emailVaild = useMemo(() => validate(emailInputValue), [emailInputValue]);
+  const passwordTooShort = useMemo(() => passwordInputValue.length < 8, [passwordInputValue]);
+  const passwordConfirmationTooShort = useMemo(
+    () => passwordConfirmationInputValue.length < 8,
+    [passwordConfirmationInputValue],
+  );
+  const passwordConfirmationDoesNotMatch = useMemo(
+    () => passwordInputValue !== passwordConfirmationInputValue,
+    [passwordInputValue, passwordConfirmationInputValue],
+  );
+  const nameEmpty = useMemo(() => nameInputValue.length === 0, [nameInputValue]);
+  const surnameEmpty = useMemo(() => surnameInputValue.length === 0, [surnameInputValue]);
+
+  const disableButton = useMemo(
+    () =>
+      !emailVaild ||
+      passwordTooShort ||
+      passwordConfirmationTooShort ||
+      passwordConfirmationDoesNotMatch ||
+      nameEmpty ||
+      surnameEmpty,
+    [
+      emailVaild,
+      passwordTooShort,
+      passwordConfirmationTooShort,
+      passwordConfirmationDoesNotMatch,
+      nameEmpty,
+      surnameEmpty,
+    ],
+  );
+
   return (
     <Screen title="Create account" showBackButton={false}>
-      <KeyboardAvoidingView style={[commonStyles.section, styles.inputsSection]}>
+      <KeyboardAvoidingView>
         <TextInput
           style={{ paddingBottom: 10, paddingHorizontal: 30 }}
           label="e-mail address"
@@ -55,8 +88,12 @@ export function SignUpScreen() {
           value={emailInputValue}
           onChangeText={(text) => setEmailInputValue(text)}
           onIconPress={clearEmailInput}
+          error={!emailVaild}
+          errorText="Email is not valid"
         />
+      </KeyboardAvoidingView>
 
+      <KeyboardAvoidingView>
         <TextInput
           style={{ paddingBottom: 10, paddingHorizontal: 30 }}
           label="first name"
@@ -65,8 +102,12 @@ export function SignUpScreen() {
           value={nameInputValue}
           onChangeText={(text) => setNameInputValue(text)}
           onIconPress={clearNameInput}
+          error={nameEmpty}
+          errorText="Name cannot be empty"
         />
+      </KeyboardAvoidingView>
 
+      <KeyboardAvoidingView>
         <TextInput
           style={{ paddingBottom: 10, paddingHorizontal: 30 }}
           label="last name"
@@ -75,38 +116,50 @@ export function SignUpScreen() {
           value={surnameInputValue}
           onChangeText={(text) => setSurnameInputValue(text)}
           onIconPress={clearSurnameInput}
+          error={surnameEmpty}
+          errorText="Surname cannot be empty"
         />
+      </KeyboardAvoidingView>
 
+      <KeyboardAvoidingView>
         <TextInput
           style={{ paddingBottom: 10, paddingHorizontal: 30 }}
           label="password"
           icon={passwordVisible ? 'visibility' : 'visibility-off'}
           value={passwordInputValue}
           secureTextEntry={!passwordVisible}
-          keyboardType="visible-password"
-          textContentType="password"
+          textContentType="newPassword"
           onChangeText={(text) => setPasswordInputValue(text)}
           alwaysShowIcon
           onIconPress={onPasswordVisibilityToggle}
+          error={passwordTooShort}
+          errorText="Password should be at least 8 characters long"
         />
+      </KeyboardAvoidingView>
 
+      <KeyboardAvoidingView>
         <TextInput
           style={{ paddingBottom: 10, paddingHorizontal: 30 }}
-          label="password"
+          label="password confirmation"
           icon={passwordVisible ? 'visibility' : 'visibility-off'}
           value={passwordConfirmationInputValue}
           secureTextEntry={!passwordVisible}
-          keyboardType="visible-password"
-          textContentType="password"
+          textContentType="newPassword"
           onChangeText={(text) => setPasswordConfirmationInputValue(text)}
           alwaysShowIcon
           onIconPress={onPasswordVisibilityToggle}
+          error={passwordConfirmationTooShort || passwordConfirmationDoesNotMatch}
+          errorText={
+            passwordConfirmationTooShort
+              ? 'Password should be at least 8 characters long'
+              : 'Passwords do not match'
+          }
         />
       </KeyboardAvoidingView>
 
       {!keyboardShown && (
         <View style={[commonStyles.section, styles.buttonsContainer]}>
-          <Button variant="filled" style={styles.button} onPress={signUp}>
+          <Button disabled={disableButton} variant="filled" style={styles.button} onPress={signUp}>
             Sign up
           </Button>
 
@@ -149,10 +202,6 @@ export function SignUpScreen() {
 }
 
 const styles = StyleSheet.create({
-  inputsSection: {
-    flex: 1, // make this inputs section take all available space but two other sections (heading & footer) will take only as much space as they need to live, no less (& no more)
-    alignContent: 'flex-start',
-  },
   button: {
     margin: 50,
     width: '100%',

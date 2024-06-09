@@ -5,12 +5,13 @@ import Text from '@components/design/Text';
 import TextInput from '@components/design/TextInput';
 import commonStyles from '@styles/commonStyles';
 import { KeyboardAvoidingView, StyleSheet, View } from 'react-native';
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useKeyboard } from '@react-native-community/hooks';
 import { useRouter } from 'expo-router';
+import { validate } from 'email-validator';
 
 export function LoginScreen() {
-  const { replace } = useRouter();
+  const { replace, push } = useRouter();
   const [emailInputValue, setEmailInputValue] = useState('');
   const [passwordInputValue, setPasswordInputValue] = useState('');
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -31,36 +32,48 @@ export function LoginScreen() {
     setEmailInputValue('');
   }, []);
 
+  const emailVaild = useMemo(() => validate(emailInputValue), [emailInputValue]);
+  const passwordEmpty = useMemo(() => passwordInputValue.length === 0, [passwordInputValue]);
+
+  const disableButton = useMemo(() => !emailVaild || passwordEmpty, [emailVaild, passwordEmpty]);
+
   return (
     <Screen
       title="Welcome back"
       subtitle="Log in and stay in touch with everyone!"
       showBackButton={false}
     >
-      <KeyboardAvoidingView style={[commonStyles.section, styles.inputsSection]}>
-        <TextInput
-          style={{ paddingBottom: 10, paddingHorizontal: 30 }}
-          label="e-mail address"
-          icon="clear"
-          textContentType="emailAddress"
-          value={emailInputValue}
-          onChangeText={(text) => setEmailInputValue(text)}
-          onIconPress={clearEmailInput}
-        />
+      <View style={[commonStyles.section, styles.inputsSection]}>
+        <KeyboardAvoidingView>
+          <TextInput
+            style={{ paddingBottom: 10, paddingHorizontal: 30 }}
+            label="e-mail address"
+            icon="clear"
+            textContentType="emailAddress"
+            value={emailInputValue}
+            onChangeText={(text) => setEmailInputValue(text)}
+            onIconPress={clearEmailInput}
+            error={!emailVaild}
+            errorText="Email is not valid"
+          />
+        </KeyboardAvoidingView>
 
-        <TextInput
-          style={{ paddingBottom: 10, paddingHorizontal: 30 }}
-          label="password"
-          icon={passwordVisible ? 'visibility' : 'visibility-off'}
-          value={passwordInputValue}
-          secureTextEntry={!passwordVisible}
-          keyboardType="visible-password"
-          textContentType="password"
-          onChangeText={(text) => setPasswordInputValue(text)}
-          alwaysShowIcon
-          onIconPress={onPasswordVisibilityToggle}
-        />
-      </KeyboardAvoidingView>
+        <KeyboardAvoidingView>
+          <TextInput
+            style={{ paddingBottom: 10, paddingHorizontal: 30 }}
+            label="password"
+            icon={passwordVisible ? 'visibility' : 'visibility-off'}
+            value={passwordInputValue}
+            secureTextEntry={!passwordVisible}
+            textContentType="password"
+            onChangeText={(text) => setPasswordInputValue(text)}
+            alwaysShowIcon
+            onIconPress={onPasswordVisibilityToggle}
+            error={passwordEmpty}
+            errorText="Password cannot be empty"
+          />
+        </KeyboardAvoidingView>
+      </View>
 
       {!keyboardShown && (
         <View style={[commonStyles.section, styles.buttonsContainer]}>
@@ -70,8 +83,9 @@ export function LoginScreen() {
             onPress={signIn}
             onLongPress={() => {
               // @ts-ignore next line (bad typings of router)
-              navigate('playground');
+              push('playground');
             }}
+            disabled={disableButton}
           >
             Log in
           </Button>

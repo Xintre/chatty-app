@@ -7,7 +7,7 @@ export default function Home() {
 
   useFocusEffect(
     useCallback(() => {
-      replace('logIn');
+      replace('signUp');
     }, [replace]),
   );
 

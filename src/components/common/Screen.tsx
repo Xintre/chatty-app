@@ -20,7 +20,7 @@ export function Screen({ title, subtitle, children, icons, showBackButton = true
   return (
     <ScrollView
       style={styles.container}
-      contentContainerStyle={{ height: '100%', alignContent: 'stretch' }}
+      contentContainerStyle={{ minHeight: '100%', alignContent: 'stretch' }}
     >
       <View style={commonStyles.section}>
         <View style={[commonStyles.bigSurface, styles.titleContainer]}>
