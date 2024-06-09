@@ -1,8 +1,8 @@
+import Button from '@components/design/Button';
+import Divider from '@components/design/Divider';
 import Text from '@components/design/Text';
 import { Colors } from '@styles/colors';
 import { ScrollView, StyleSheet } from 'react-native';
-
-import Divider from '../design/Divider';
 
 export function Playground() {
   return (
@@ -33,6 +33,27 @@ export function Playground() {
       <Text variant="h2" style={styles.plumTitle2}>
         Button
       </Text>
+
+      <Divider secondary />
+
+      <Button variant="filled">Button - filled</Button>
+      <Button variant="filled" icon="chevron-left">
+        Button - filled (with icon)
+      </Button>
+      <Button variant="filled" disabled>
+        Button - filled (disabled)
+      </Button>
+
+      <Button variant="text">Button - text</Button>
+      <Button variant="text" icon="chevron-left">
+        Button - text (with icon)
+      </Button>
+      <Button variant="text" disabled>
+        Button - text (disabled)
+      </Button>
+      <Button variant="text" icon="chevron-left" disabled>
+        Button - text (with icon, disabled)
+      </Button>
     </ScrollView>
   );
 }
