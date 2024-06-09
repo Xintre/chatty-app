@@ -17,6 +17,7 @@ export type TextInputProps = {
   error?: boolean;
   icon?: IconButtonProps['icon'];
   disabled?: boolean;
+  alwaysShowIcon?: boolean;
 } & RNTextInputProps;
 
 const INPUT_BORDER_RADIUS = 10; // as in Figma :)
@@ -24,6 +25,7 @@ const INPUT_BORDER_RADIUS = 10; // as in Figma :)
 export function TextInput({
   error,
   label,
+  alwaysShowIcon = false,
   errorText = 'Input validation error',
   style,
   icon,
@@ -72,7 +74,9 @@ export function TextInput({
           editable={!disabled}
         />
 
-        {!!(icon && props.value?.length && isFocused) && <IconButton icon={icon} iconSize={18} />}
+        {!!(icon && ((props.value?.length && isFocused) || alwaysShowIcon)) && (
+          <IconButton style={{ paddingVertical: 0, paddingTop: 5 }} icon={icon} iconSize={18} />
+        )}
       </View>
 
       {error && !disabled && (
@@ -88,7 +92,7 @@ const styles = StyleSheet.create({
   verticalContainer: {
     paddingHorizontal: 16,
     flexDirection: 'column',
-    flex: 1,
+    width: '100%',
   },
   horizontalContainer: {
     alignItems: 'center',

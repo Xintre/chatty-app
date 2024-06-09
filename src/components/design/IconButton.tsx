@@ -1,6 +1,6 @@
 import Colors from '@styles/colors';
 import { MaterialIcons } from '@expo/vector-icons';
-import { Pressable, PressableProps, StyleSheet } from 'react-native';
+import { Pressable, PressableProps, StyleProp, StyleSheet, ViewStyle } from 'react-native';
 import { useCallback, useMemo, useState } from 'react';
 
 export type IconButtonProps = {
@@ -8,6 +8,7 @@ export type IconButtonProps = {
   iconSize?: number;
   selected?: boolean;
   background?: boolean;
+  style?: StyleProp<ViewStyle>;
 } & PressableProps;
 
 export function IconButton({
@@ -56,6 +57,7 @@ export function IconButton({
         {
           backgroundColor: background ? (selected ? Colors.PLUM500 : Colors.WHITE) : 'transparent',
         },
+        style,
       ]}
     >
       <MaterialIcons name={icon} size={iconSize} color={textColor} />
