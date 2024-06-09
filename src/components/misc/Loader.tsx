@@ -4,7 +4,7 @@ import { ActivityIndicator, View } from 'react-native';
 export default function Loader() {
   return (
     <View style={[commonStyles.centerBothDirections, commonStyles.fullWH]}>
-      <ActivityIndicator animating={true} />
+      <ActivityIndicator size="large" animating={true} />
     </View>
   );
 }

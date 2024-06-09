@@ -1,28 +1,69 @@
+import * as SecureStore from 'expo-secure-store';
 import Button from '@components/design/Button';
 import Colors from '@styles/colors';
+import Loader from '@components/misc/Loader';
 import Screen from '@components/common/Screen';
+import SecureStoreKeys from '@constants/SecureStoreKeys';
 import Text from '@components/design/Text';
 import TextInput from '@components/design/TextInput';
+import Toast from 'react-native-root-toast';
 import commonStyles from '@styles/commonStyles';
-import { KeyboardAvoidingView, StyleSheet, View } from 'react-native';
+import { Alert, KeyboardAvoidingView, StyleSheet, View } from 'react-native';
+import { capitalize } from 'lodash';
 import { useCallback, useMemo, useState } from 'react';
 import { useKeyboard } from '@react-native-community/hooks';
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useMutation } from '@apollo/client';
 import { validate } from 'email-validator';
+
+import { LOGIN_USER_MUTATION } from '../graphql/mutations';
 
 export function LoginScreen() {
   const { replace, push } = useRouter();
-  const [emailInputValue, setEmailInputValue] = useState('');
-  const [passwordInputValue, setPasswordInputValue] = useState('');
+  const { email = '', password = '' } = useLocalSearchParams<{ email: string; password: string }>();
+  const [emailInputValue, setEmailInputValue] = useState(email);
+  const [passwordInputValue, setPasswordInputValue] = useState(password);
   const [passwordVisible, setPasswordVisible] = useState(false);
   const { keyboardShown } = useKeyboard();
+
+  const [logInUserMutation, { loading }] = useMutation(LOGIN_USER_MUTATION, {
+    variables: {
+      email: emailInputValue,
+      password: passwordInputValue,
+    },
+    onError(error) {
+      if (error.graphQLErrors.length > 0) {
+        // Apollo server response returned errors - show the last one
+        Alert.alert(
+          'Error logging in',
+          capitalize((error.graphQLErrors[0] as any).errors ?? error.graphQLErrors[0].message),
+        );
+      } else {
+        // local Apollo error, e.g. network error
+        Toast.show('Error logging in' + error.message);
+      }
+
+      console.error('Error logging in', error);
+    },
+    onCompleted(data) {
+      Toast.show(`Logged in successfully 🎉`);
+
+      console.log('Logged in successfully', data);
+
+      SecureStore.setItem(SecureStoreKeys.token, data.loginUser.token);
+
+      replace('chats');
+    },
+  });
 
   const signUp = useCallback(() => {
     // @ts-ignore next line (bad typings of router)
     replace('signUp');
   }, [replace]);
 
-  const signIn = useCallback(() => {}, []);
+  const signIn = useCallback(() => {
+    logInUserMutation();
+  }, [logInUserMutation]);
 
   const onPasswordVisibilityToggle = useCallback(() => {
     setPasswordVisible(!passwordVisible);
@@ -43,63 +84,72 @@ export function LoginScreen() {
       subtitle="Log in and stay in touch with everyone!"
       showBackButton={false}
     >
-      <View style={[commonStyles.section, styles.inputsSection]}>
-        <KeyboardAvoidingView>
-          <TextInput
-            style={{ paddingBottom: 10, paddingHorizontal: 30 }}
-            label="e-mail address"
-            icon="clear"
-            textContentType="emailAddress"
-            value={emailInputValue}
-            onChangeText={(text) => setEmailInputValue(text)}
-            onIconPress={clearEmailInput}
-            error={!emailVaild}
-            errorText="Email is not valid"
-          />
-        </KeyboardAvoidingView>
+      {loading ? (
+        <Loader />
+      ) : (
+        <>
+          <View style={[commonStyles.section, styles.inputsSection]}>
+            <KeyboardAvoidingView>
+              <TextInput
+                style={{ paddingBottom: 10, paddingHorizontal: 30 }}
+                label="e-mail address"
+                icon="clear"
+                textContentType="emailAddress"
+                value={emailInputValue}
+                onChangeText={(text) => setEmailInputValue(text)}
+                onIconPress={clearEmailInput}
+                error={!emailVaild}
+                errorText="Email is not valid"
+              />
+            </KeyboardAvoidingView>
 
-        <KeyboardAvoidingView>
-          <TextInput
-            style={{ paddingBottom: 10, paddingHorizontal: 30 }}
-            label="password"
-            icon={passwordVisible ? 'visibility' : 'visibility-off'}
-            value={passwordInputValue}
-            secureTextEntry={!passwordVisible}
-            textContentType="password"
-            onChangeText={(text) => setPasswordInputValue(text)}
-            alwaysShowIcon
-            onIconPress={onPasswordVisibilityToggle}
-            error={passwordEmpty}
-            errorText="Password cannot be empty"
-          />
-        </KeyboardAvoidingView>
-      </View>
-
-      {!keyboardShown && (
-        <View style={[commonStyles.section, styles.buttonsContainer]}>
-          <Button
-            variant="filled"
-            style={styles.button}
-            onPress={signIn}
-            onLongPress={() => {
-              // @ts-ignore next line (bad typings of router)
-              push('playground');
-            }}
-            disabled={disableButton}
-          >
-            Log in
-          </Button>
-
-          <View style={styles.signUpContainer}>
-            <Text variant="button" style={{ color: Colors.WHITE, marginTop: 13, marginRight: 7 }}>
-              Don&apos;t have an account?
-            </Text>
-
-            <Button variant="text" onPress={signUp}>
-              Sign up
-            </Button>
+            <KeyboardAvoidingView>
+              <TextInput
+                style={{ paddingBottom: 10, paddingHorizontal: 30 }}
+                label="password"
+                icon={passwordVisible ? 'visibility' : 'visibility-off'}
+                value={passwordInputValue}
+                secureTextEntry={!passwordVisible}
+                textContentType="password"
+                onChangeText={(text) => setPasswordInputValue(text)}
+                alwaysShowIcon
+                onIconPress={onPasswordVisibilityToggle}
+                error={passwordEmpty}
+                errorText="Password cannot be empty"
+              />
+            </KeyboardAvoidingView>
           </View>
-        </View>
+
+          {!keyboardShown && (
+            <View style={[commonStyles.section, styles.buttonsContainer]}>
+              <Button
+                variant="filled"
+                style={styles.button}
+                onPress={signIn}
+                onLongPress={() => {
+                  // @ts-ignore next line (bad typings of router)
+                  push('playground');
+                }}
+                disabled={disableButton}
+              >
+                Log in
+              </Button>
+
+              <View style={styles.signUpContainer}>
+                <Text
+                  variant="button"
+                  style={{ color: Colors.WHITE, marginTop: 13, marginRight: 7 }}
+                >
+                  Don&apos;t have an account?
+                </Text>
+
+                <Button variant="text" onPress={signUp}>
+                  Sign up
+                </Button>
+              </View>
+            </View>
+          )}
+        </>
       )}
     </Screen>
   );
