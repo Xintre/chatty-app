@@ -20,6 +20,14 @@ export const REGISTER_USER_MUTATION = gql`
   }
 `;
 
+export const SEND_MESSAGE_MUTATION = gql`
+  mutation sendMessage($body: String!, $roomID: String!) {
+    sendMessage(body: $body, roomId: $roomID) {
+      body
+    }
+  }
+`;
+
 export const LOGIN_USER_MUTATION = gql`
   mutation loginUser($email: String!, $password: String!) {
     loginUser(email: $email, password: $password) {

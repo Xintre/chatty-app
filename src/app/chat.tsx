@@ -3,54 +3,72 @@ import Colors from '@styles/colors';
 import Loader from '@components/misc/Loader';
 import Screen from '@components/common/Screen';
 import Text from '@components/design/Text';
+import Toast from 'react-native-root-toast';
 import commonStyles from '@styles/commonStyles';
-import { GET_MESSAGES_IN_ROOM_QUERY, GET_USERS_ROOMS_QUERY } from '@graphql/queries';
+import { GET_MESSAGES_IN_ROOM_QUERY } from '@graphql/queries';
 import { GiftedChat } from 'react-native-gifted-chat';
-import { RoomDetails } from '@constants/types';
+import { Message, RoomDetails } from '@constants/types';
+import { SEND_MESSAGE_MUTATION } from '@graphql/mutations';
 import { StyleSheet, View } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
-import { useQuery } from '@apollo/client';
-
-export type ChatProps = {};
+import { useMutation, useQuery } from '@apollo/client';
 
 export function Chat() {
-  const { roomId, roomName } = useLocalSearchParams<{ roomId: string; roomName: string }>();
+  const { roomId, roomName } = useLocalSearchParams<{
+    roomId: string;
+    roomName: string;
+  }>();
 
-  const { data, loading, error, refetch } = useQuery<{ room: RoomDetails }>(
-    GET_MESSAGES_IN_ROOM_QUERY,
-    {
-      variables: {
-        id: roomId,
-      },
-      pollInterval: 1000, // once per second is fast enough :)
+  const {
+    data: roomQueryData,
+    loading: roomQueryLoading,
+    error: roomQueryError,
+    refetch: roomQueryRefetch,
+  } = useQuery<{ room: RoomDetails }>(GET_MESSAGES_IN_ROOM_QUERY, {
+    variables: {
+      id: roomId,
     },
-  );
+    pollInterval: 1000, // once per second is fast enough :)
+  });
+
+  const [sendMessage] = useMutation<{
+    message: Message;
+  }>(SEND_MESSAGE_MUTATION, {
+    onError(error) {
+      console.error('Error sending message', error);
+
+      Toast.show('Error sending message, try again!');
+    },
+    onCompleted() {
+      console.log('Message sent!');
+    },
+  });
 
   return (
     <Screen title={roomName!}>
       <View style={[commonStyles.fill, styles.background]}>
-        {loading ? (
+        {roomQueryLoading ? (
           <Loader />
-        ) : error ? (
+        ) : roomQueryError ? (
           <View style={[commonStyles.fill, { paddingHorizontal: 18 }]}>
             <Text
               variant="h3"
               style={{ color: Colors.ERROR, textAlign: 'center', marginBottom: 20 }}
             >
-              Error loading data - {error.name}
+              Error loading data - {roomQueryError.name}
             </Text>
 
             <Text variant="body" style={{ color: Colors.ERROR, textAlign: 'center' }}>
-              {error.message}
+              {roomQueryError.message}
             </Text>
 
-            <Button variant="filled" onPress={() => refetch()} style={{ marginTop: 20 }}>
+            <Button variant="filled" onPress={() => roomQueryRefetch()} style={{ marginTop: 20 }}>
               Retry
             </Button>
           </View>
         ) : (
           <GiftedChat
-            messages={data?.room.messages.map((message) => ({
+            messages={roomQueryData?.room.messages.map((message) => ({
               _id: message.id,
               text: message.body,
               createdAt: new Date(message.insertedAt),
@@ -58,10 +76,34 @@ export function Chat() {
                 _id: message.user.id,
                 name: `${message.user.firstName} ${message.user.lastName}`,
               },
+              received: message.user.id !== roomQueryData?.room.user.id,
             }))}
-            // onSend={(messages) => onSend(messages)}
+            onSend={(messages) => {
+              for (const message of messages) {
+                console.log(`Sending message '${message.text}'`);
+
+                sendMessage({
+                  variables: {
+                    body: message.text,
+                    roomID: roomId,
+                  },
+                });
+              }
+            }}
+            renderMessageText={(message) => (
+              <Text
+                variant="body"
+                style={{
+                  paddingVertical: 8,
+                  paddingHorizontal: 12,
+                  color: message.currentMessage?.received ? 'black' : 'white',
+                }}
+              >
+                {message.currentMessage?.text}
+              </Text>
+            )}
             user={{
-              _id: data?.room.user.id ?? '---',
+              _id: roomQueryData?.room.user.id ?? '---',
             }}
           />
         )}
