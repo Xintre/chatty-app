@@ -10,3 +10,20 @@ export const GET_USERS_ROOMS_QUERY = gql`
     }
   }
 `;
+
+export const GET_MESSAGES_IN_ROOM_QUERY = gql`
+  query room($id: ID!) {
+    room(id: $id) {
+      messages {
+        body
+        id
+        insertedAt
+        user {
+          firstName
+          lastName
+          id
+        }
+      }
+    }
+  }
+`;

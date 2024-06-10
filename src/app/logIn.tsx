@@ -10,14 +10,13 @@ import Toast from 'react-native-root-toast';
 import commonStyles from '@styles/commonStyles';
 import useAuthContext from '@hooks/useAuthContext';
 import { Alert, KeyboardAvoidingView, StyleSheet, View } from 'react-native';
+import { LOGIN_USER_MUTATION } from '@graphql/mutations';
 import { capitalize } from 'lodash';
 import { useCallback, useMemo, useState } from 'react';
 import { useKeyboard } from '@react-native-community/hooks';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useMutation } from '@apollo/client';
 import { validate } from 'email-validator';
-
-import { LOGIN_USER_MUTATION } from '../graphql/mutations';
 
 export function LoginScreen() {
   const { replace, push } = useRouter();
@@ -131,15 +130,7 @@ export function LoginScreen() {
 
           {!keyboardShown && (
             <View style={[commonStyles.section, styles.buttonsContainer]}>
-              <Button
-                variant="filled"
-                onPress={signIn}
-                onLongPress={() => {
-                  // @ts-ignore next line (bad typings of router)
-                  push('playground');
-                }}
-                disabled={disableButton}
-              >
+              <Button variant="filled" onPress={signIn} disabled={disableButton}>
                 Log in
               </Button>
 
@@ -151,7 +142,14 @@ export function LoginScreen() {
                   Don&apos;t have an account?
                 </Text>
 
-                <Button variant="text" onPress={signUp}>
+                <Button
+                  variant="text"
+                  onPress={signUp}
+                  onLongPress={() => {
+                    // @ts-ignore next line (bad typings of router)
+                    push('playground');
+                  }}
+                >
                   Sign up
                 </Button>
               </View>

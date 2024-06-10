@@ -8,14 +8,13 @@ import TextInput from '@components/design/TextInput';
 import Toast from 'react-native-root-toast';
 import commonStyles from '@styles/commonStyles';
 import { Alert, KeyboardAvoidingView, StyleSheet, View } from 'react-native';
+import { REGISTER_USER_MUTATION } from '@graphql/mutations';
 import { capitalize } from 'lodash';
 import { useCallback, useMemo, useState } from 'react';
 import { useKeyboard } from '@react-native-community/hooks';
 import { useMutation } from '@apollo/client';
 import { useRouter } from 'expo-router';
 import { validate } from 'email-validator';
-
-import { REGISTER_USER_MUTATION } from '../graphql/mutations';
 
 export function SignUpScreen() {
   const { replace } = useRouter();

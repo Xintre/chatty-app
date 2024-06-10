@@ -4,7 +4,7 @@ This is an Apollo Client GraphQL-based chat application in React Native using [E
 
 ## Implementation process 🛠️
 
-This project has been planned in a kanban project board on GitHub. You can find it [here](https://github.com/users/Xintre/projects/1). Provided the project's timespan had been longer, I would've used the standard Gantt chart approach, however since the primary assumption was to complete the whole project in 3 days, I had to wrap it in a kanban (Gantt suports >= days time unit).
+This project has been planned in a kanban project board on GitHub, which you can find [here](https://github.com/users/Xintre/projects/1/views/1?visibleFields=%5B"Title"%2C"Assignees"%2C"Status"%2C"Milestone"%2C"Labels"%2C"Linked+pull+requests"%5D). Provided the project's timespan had been longer, I would've used the standard Gantt chart approach, however since the primary assumption was to complete the whole project in 3 days, I had to wrap it in a kanban (Gantt suports >= days time unit).
 
 All [issues](https://github.com/Xintre/chatty-app/issues) and pull requests have been linked to the project board, so you can easily track the progress of the project.
 
@@ -24,7 +24,8 @@ This project contains a single GH Actions [workflow for CI](./.github/workflows/
 
 - [React Native](https://reactnative.dev) + Expo for cross-platform mobile development
 - [Apollo Client](https://www.apollographql.com/docs/react/) for GraphQL queries and mutations
-- [React Navigation](https://reactnavigation.org) for navigation with Expo router
+- [React Navigation](https://reactnavigation.org) for navigation with [Expo Router](https://docs.expo.dev/router/introduction)
+- [moment.js](https://momentjs.com) for date formatting (here: for relative time differences in humanized format)
 
 ## Code style 💫
 

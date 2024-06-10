@@ -6,7 +6,7 @@ import SecureStoreKeys from '@constants/SecureStoreKeys';
 import Text from '@components/design/Text';
 import commonStyles from '@styles/commonStyles';
 import { ReactNode } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import { useNavigation, useRouter } from 'expo-router';
 
 export type ScreenProps = {
@@ -16,6 +16,7 @@ export type ScreenProps = {
   subtitle?: string;
   backgroundColor?: string;
   children: ReactNode;
+  style?: StyleProp<ViewStyle>;
 };
 
 export function Screen({
@@ -25,6 +26,7 @@ export function Screen({
   icons,
   showBackButton = true,
   backgroundColor = Colors.BLUE100,
+  style,
 }: ScreenProps) {
   const { canGoBack, goBack } = useNavigation();
   const { replace } = useRouter();
@@ -37,6 +39,7 @@ export function Screen({
         {
           backgroundColor,
         },
+        style,
       ]}
     >
       <View

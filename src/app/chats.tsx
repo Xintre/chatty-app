@@ -6,19 +6,18 @@ import RoomListItem from '@components/design/RoomListItem';
 import Screen from '@components/common/Screen';
 import Text from '@components/design/Text';
 import commonStyles from '@styles/commonStyles';
+import { GET_USERS_ROOMS_QUERY } from '@graphql/queries';
 import { RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
-import { Room } from '@constants/types';
+import { RoomListing } from '@constants/types';
 import { useQuery } from '@apollo/client';
 import { useRouter } from 'expo-router';
-
-import { GET_USERS_ROOMS_QUERY } from '../graphql/queries';
 
 export function ChatsScreen() {
   const { push } = useRouter();
 
   const { loading, error, data, refetch } = useQuery<{
     usersRooms: {
-      rooms: Room[];
+      rooms: RoomListing[];
     };
   }>(GET_USERS_ROOMS_QUERY);
 
@@ -56,19 +55,7 @@ export function ChatsScreen() {
             contentContainerStyle={[commonStyles.fill, styles.roomsList]}
             refreshControl={<RefreshControl refreshing={loading} onRefresh={refetch} />}
           >
-            {(
-              [
-                {
-                  id: '123049u2',
-                  name: 'Room 1',
-                },
-                {
-                  id: '123049u3',
-                  name: 'Room 2',
-                },
-                ...(data?.usersRooms.rooms ?? []),
-              ] as Room[]
-            ).map((room) => (
+            {data?.usersRooms.rooms?.map((room) => (
               <RoomListItem
                 key={room.id}
                 room={room}
