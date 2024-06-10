@@ -2,6 +2,27 @@
 
 This is an Apollo Client GraphQL-based chat application in React Native using [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app). It has been prepared according to TheWidlarzGroup's recruitment task guidelines and uses their [GraphQL API](https://chat.thewidlarzgroup.com/api/graphql).
 
+## Screenshots 📸
+
+| Playground screen         | Login screen         | Signup & login                        | Chats                |
+| ------------------------- | -------------------- | ------------------------------------- | -------------------- |
+| [](./docs/playground.mp4) | [](./docs/login.mp4) | [](./docs/signup_prefilled_login.mp4) | [](./docs/chats.mp4) |
+
+## Usage 📱
+
+There are a few easter-eggs in the app:
+
+- long press the `Sign up` button on **LogIn screen** to show **Playground screen** demonstrating components
+- at any time, long press the title on the top to log out (precisely: forget the token and reset the `AuthContext` state)
+
+## Code style 💫
+
+This project involves the following tools:
+
+- prettier for code formatting
+- eslint for code linting
+- lefthook for git hooks to lint code before commits
+
 ## Implementation process 🛠️
 
 This project has been planned in a kanban project board on GitHub, which you can find [here](https://github.com/users/Xintre/projects/1/views/1?visibleFields=%5B"Title"%2C"Assignees"%2C"Status"%2C"Milestone"%2C"Labels"%2C"Linked+pull+requests"%5D). Provided the project's timespan had been longer, I would've used the standard Gantt chart approach, however since the primary assumption was to complete the whole project in 3 days, I had to wrap it in a kanban (Gantt suports >= days time unit).
@@ -19,14 +40,6 @@ There also exist 2 milestones: [`Required`](https://github.com/Xintre/chatty-app
 ## Continuous Integration 🔄
 
 This project contains a single GH Actions [workflow for CI](./.github/workflows/ci.yml) that simply installs dependencies with NPM and runs `npm run lint` to ensure valid code style (even though it should be enforced by GIT pre-commit hooks - as a secondary check). Merging of PRs is configured to be **blocked** until all status checks of GH Actions are "pass".
-
-## Code style 💫
-
-This project involves the following tools:
-
-- prettier for code formatting
-- eslint for code linting
-- lefthook for git hooks to lint code before commits
 
 ## Technical details
 
