@@ -4,9 +4,29 @@ This is an Apollo Client GraphQL-based chat application in React Native using [E
 
 ## Screenshots 📸
 
-| Playground screen         | Login screen         | Signup & login                        | Chats                |
-| ------------------------- | -------------------- | ------------------------------------- | -------------------- |
-| [](./docs/playground.mp4) | [](./docs/login.mp4) | [](./docs/signup_prefilled_login.mp4) | [](./docs/chats.mp4) |
+<details>
+  <summary>Playground</summary>
+   
+https://github.com/Xintre/chatty-app/assets/110635331/0c6124d3-47d0-473c-9166-41e34209ed59
+</details>
+
+<details>
+  <summary>Login screen</summary>
+   
+https://github.com/Xintre/chatty-app/assets/110635331/fe14df8c-24b2-4db1-918e-426c0127ddeb
+</details>
+
+<details>
+  <summary>Signup & login screens</summary>
+   
+https://github.com/Xintre/chatty-app/assets/110635331/2a39e040-7a31-4a04-8e61-250e27ae33f8
+</details>
+
+<details>
+  <summary>Chats screen</summary>
+   
+https://github.com/Xintre/chatty-app/assets/110635331/d6a8c9ce-f5fc-4422-8a50-0cdc8973e83b
+</details>
 
 ## Usage 📱
 
