@@ -24,6 +24,12 @@ export const GET_MESSAGES_IN_ROOM_QUERY = gql`
           id
         }
       }
+
+      user {
+        id
+        firstName
+        lastName
+      }
     }
   }
 `;

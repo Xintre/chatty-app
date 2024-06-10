@@ -17,10 +17,12 @@ export type Message = {
   id: string;
   insertedAt: string;
   /** sender info */
-  user: User[];
+  user: User;
 };
 
 /** Typing for room returned from rooms GraphQL query */
 export type RoomDetails = {
   messages: Message[];
+
+  user: User;
 };
