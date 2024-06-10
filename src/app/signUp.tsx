@@ -8,6 +8,7 @@ import TextInput from '@components/design/TextInput';
 import Toast from 'react-native-root-toast';
 import commonStyles from '@styles/commonStyles';
 import { Alert, KeyboardAvoidingView, StyleSheet, View } from 'react-native';
+import { REGISTER_USER_MUTATION } from '@graphql/mutations';
 import { capitalize } from 'lodash';
 import { useCallback, useMemo, useState } from 'react';
 import { useKeyboard } from '@react-native-community/hooks';
@@ -15,18 +16,15 @@ import { useMutation } from '@apollo/client';
 import { useRouter } from 'expo-router';
 import { validate } from 'email-validator';
 
-import { REGISTER_USER_MUTATION } from '../graphql/mutations';
-
 export function SignUpScreen() {
   const { replace } = useRouter();
   const { keyboardShown } = useKeyboard();
 
-  const [emailInputValue, setEmailInputValue] = useState('natalia.rozga02@gmail.com');
-  const [nameInputValue, setNameInputValue] = useState('Natalia');
-  const [surnameInputValue, setSurnameInputValue] = useState('Rózga');
-  const [passwordInputValue, setPasswordInputValue] = useState('asdqweqwe123');
-  const [passwordConfirmationInputValue, setPasswordConfirmationInputValue] =
-    useState('asdqweqwe123');
+  const [emailInputValue, setEmailInputValue] = useState('');
+  const [nameInputValue, setNameInputValue] = useState('');
+  const [surnameInputValue, setSurnameInputValue] = useState('');
+  const [passwordInputValue, setPasswordInputValue] = useState('');
+  const [passwordConfirmationInputValue, setPasswordConfirmationInputValue] = useState('');
   const [passwordVisible, setPasswordVisible] = useState(false);
 
   const [registerUserMutation, { loading }] = useMutation(REGISTER_USER_MUTATION, {
@@ -123,7 +121,7 @@ export function SignUpScreen() {
   }, [registerUserMutation]);
 
   return (
-    <Screen title="Create account" showBackButton={false}>
+    <Screen title="Create account" showBackButton={false} backgroundColor={Colors.BLUE300}>
       {loading ? (
         <Loader />
       ) : (
@@ -208,12 +206,7 @@ export function SignUpScreen() {
 
           {!keyboardShown && (
             <View style={[commonStyles.section, styles.buttonsContainer]}>
-              <Button
-                disabled={disableButton}
-                variant="filled"
-                style={styles.button}
-                onPress={signUp}
-              >
+              <Button disabled={disableButton} variant="filled" onPress={signUp}>
                 Sign up
               </Button>
 
@@ -261,10 +254,6 @@ export function SignUpScreen() {
 }
 
 const styles = StyleSheet.create({
-  button: {
-    margin: 50,
-    width: '100%',
-  },
   buttonsContainer: {
     paddingHorizontal: 20,
     paddingTop: 20,

@@ -1,7 +1,7 @@
 import Colors from '@styles/colors';
 import Corners from '@styles/corners';
 import { MaterialIcons } from '@expo/vector-icons';
-import { Pressable, PressableProps, StyleSheet } from 'react-native';
+import { Pressable, PressableProps, StyleProp, StyleSheet, ViewStyle } from 'react-native';
 import { ReactNode, useCallback, useMemo, useState } from 'react';
 
 import Text from './Text';
@@ -12,6 +12,7 @@ export type ButtonProps = {
   children: ReactNode;
   variant: ButtonVariant;
   icon?: keyof (typeof MaterialIcons)['glyphMap']; // I love TS: let's extract the keys since the authors forgot about types :)
+  style?: StyleProp<ViewStyle>;
 } & PressableProps;
 
 export function Button({ children, variant, icon, style, ...props }: ButtonProps) {
@@ -62,6 +63,7 @@ export function Button({ children, variant, icon, style, ...props }: ButtonProps
         {
           backgroundColor,
         },
+        style,
       ]}
     >
       {!!icon && <MaterialIcons name={icon} size={24} color={textColor} />}

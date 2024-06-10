@@ -14,7 +14,7 @@ export type IconButtonProps = {
 export function IconButton({
   selected = false,
   background = false,
-  iconSize = 24,
+  iconSize = 28,
   icon,
   style,
   ...props
@@ -60,7 +60,18 @@ export function IconButton({
         style,
       ]}
     >
-      <MaterialIcons name={icon} size={iconSize} color={textColor} />
+      <MaterialIcons
+        name={icon}
+        size={iconSize}
+        color={textColor}
+        style={{
+          transform: [
+            {
+              scale: 1.25,
+            },
+          ],
+        }}
+      />
     </Pressable>
   );
 }

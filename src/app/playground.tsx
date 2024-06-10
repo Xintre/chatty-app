@@ -2,23 +2,18 @@ import Button from '@components/design/Button';
 import Corners from '@styles/corners';
 import Divider from '@components/design/Divider';
 import IconButton from '@components/design/IconButton';
+import Screen from '@components/common/Screen';
 import Text from '@components/design/Text';
 import TextInput from '@components/design/TextInput';
 import { Colors } from '@styles/colors';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useState } from 'react';
 
 export function Playground() {
   const [textInputValue, setTextInputValue] = useState('');
 
   return (
-    <ScrollView contentContainerStyle={styles.root}>
-      <Text variant="h1" style={styles.plumTitle}>
-        Playground ⚛️
-      </Text>
-
-      <Divider />
-
+    <Screen title="Playground ⚛️" style={styles.root}>
       <Text variant="h2" style={styles.plumTitle2}>
         Typography
       </Text>
@@ -113,7 +108,7 @@ export function Playground() {
           onChangeText={(text) => setTextInputValue(text)}
         />
       </View>
-    </ScrollView>
+    </Screen>
   );
 }
 
@@ -122,10 +117,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 10,
     gap: 8,
-  },
-  plumTitle: {
-    color: Colors.PLUM500,
-    textAlign: 'center',
   },
   plumTitle2: {
     color: Colors.PLUM400,

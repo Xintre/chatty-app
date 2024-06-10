@@ -1,44 +1,95 @@
+import * as SecureStore from 'expo-secure-store';
 import Colors from '@styles/colors';
+import Corners from '@styles/corners';
 import IconButton from '@components/design/IconButton';
+import SecureStoreKeys from '@constants/SecureStoreKeys';
 import Text from '@components/design/Text';
 import commonStyles from '@styles/commonStyles';
 import { ReactNode } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
-import { useNavigation } from 'expo-router';
+import { ScrollView, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
+import { useNavigation, useRouter } from 'expo-router';
 
 export type ScreenProps = {
   icons?: ReactNode[];
   showBackButton?: boolean;
   title: string;
   subtitle?: string;
+  backgroundColor?: string;
   children: ReactNode;
+  style?: StyleProp<ViewStyle>;
 };
 
-export function Screen({ title, subtitle, children, icons, showBackButton = true }: ScreenProps) {
+export function Screen({
+  title,
+  subtitle,
+  children,
+  icons,
+  showBackButton = true,
+  backgroundColor = Colors.BLUE100,
+  style,
+}: ScreenProps) {
   const { canGoBack, goBack } = useNavigation();
+  const { replace } = useRouter();
 
   return (
     <ScrollView
       style={styles.container}
-      contentContainerStyle={{ minHeight: '100%', alignContent: 'stretch' }}
+      contentContainerStyle={[
+        styles.contentContainer,
+        {
+          backgroundColor,
+        },
+        style,
+      ]}
     >
-      <View style={commonStyles.section}>
-        <View style={[commonStyles.bigSurface, styles.titleContainer]}>
-          <View style={styles.actions}>
-            {showBackButton && canGoBack() && (
-              <IconButton
-                onPress={goBack}
-                icon="chevron-left"
-                style={{ alignSelf: 'center', marginLeft: 6 }}
-              />
-            )}
+      <View
+        style={[
+          commonStyles.section,
+          {
+            width: '100%',
+            borderBottomLeftRadius: Corners.BIG,
+            borderBottomRightRadius: Corners.BIG,
+            backgroundColor: Colors.BLUE300,
+            marginBottom: 10,
+          },
+        ]}
+      >
+        <View style={[styles.titleContainer, styles.actions]}>
+          {showBackButton && canGoBack() && (
+            <IconButton
+              onPress={goBack}
+              icon="chevron-left"
+              style={{ alignSelf: 'center', marginLeft: 6 }}
+            />
+          )}
 
-            <Text variant="h2" style={[styles.plumTitle, { alignSelf: 'center' }]}>
-              {title}
-            </Text>
+          <Text
+            variant="h2"
+            style={[styles.plumTitle, { alignSelf: 'center' }]}
+            onLongPress={() => {
+              console.log('Logging out on user request');
+
+              SecureStore.deleteItemAsync(SecureStoreKeys.token).then(() => {
+                replace('logIn');
+              });
+            }}
+          >
+            {title}
+          </Text>
+
+          <View
+            style={[
+              styles.actions,
+              {
+                alignContent: 'center',
+                paddingRight: 10,
+                justifyContent: 'flex-end',
+                gap: 10,
+              },
+            ]}
+          >
+            {!!icons?.length && icons}
           </View>
-
-          {!!icons?.length && <View style={styles.actions}>{icons}</View>}
         </View>
 
         {!!subtitle && (
@@ -54,7 +105,11 @@ export function Screen({ title, subtitle, children, icons, showBackButton = true
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: Colors.BLUE300 },
+  container: { flex: 1 },
+  contentContainer: {
+    minHeight: '100%',
+    alignContent: 'stretch',
+  },
   plumTitle: {
     marginTop: 30,
     color: Colors.PLUM500,
@@ -72,7 +127,7 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     marginTop: 20,
-    marginBottom: 20,
+    justifyContent: 'space-between',
   },
 });
 
